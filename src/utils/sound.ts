@@ -67,12 +67,15 @@ private playChordBass(freq: number) {
   constructor() {
     try {
       // Create context but it starts in 'suspended' state
-      this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const CtxCtor = (window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext);
+      if (!CtxCtor) throw new Error('Web Audio API not supported');
+      const ctx = new CtxCtor();
+      this.ctx = ctx;
       
-      this.masterGain = this.ctx.createGain();
-      this.masterGain.connect(this.ctx.destination);
+      this.masterGain = ctx.createGain();
+      this.masterGain.connect(ctx.destination);
       
-      this.musicGain = this.ctx.createGain();
+      this.musicGain = ctx.createGain();
       this.musicGain.connect(this.masterGain);
       
       // Initial volume set to 0 to prevent loud pops on start
