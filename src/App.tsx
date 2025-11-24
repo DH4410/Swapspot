@@ -276,8 +276,25 @@ const App: React.FC = () => {
                     }}
                 />
                 
-                <div className="flex-1 flex items-center justify-center min-h-[50vh] py-4">
-                    <div className={`grid ${getGridCols()} gap-2 sm:gap-3 w-full max-w-[min(95vw,600px)] aspect-square transition-all duration-500`}>
+                {/* 
+                   Fix: Removed min-h-[50vh] (it pushed content down).
+                   Added overflow-hidden to prevent scrollbars.
+                */}
+                <div className="flex-1 flex items-center justify-center py-2 overflow-hidden">
+                    
+                    {/* 
+                       Fix: Changed size logic.
+                       w-[min(90vw,65vh)] -> This makes the square strictly follow 
+                       whichever dimension is smaller (width on phones, height on laptops).
+                       This ensures it never goes off-screen vertically.
+                    */}
+                    <div className={`
+                        grid ${getGridCols()} 
+                        gap-2 sm:gap-3 
+                        w-[min(90vw,65vh)] 
+                        aspect-square 
+                        transition-all duration-500
+                    `}>
                         {grid.map((item) => {
                             const isSelected = selectedIds.includes(item.id);
                             
